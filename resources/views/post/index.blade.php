@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('content')
+
 <div class="container-sm">
 <table  class="table table-striped" >
 <tr>
@@ -7,16 +9,18 @@
     <th>Description</th>
     <th>Created At</th>
     <th>Posted At</th>
+    <th>Posted By</th>
     <th colspan="3">Actions</th>
 </tr>
 @foreach ($posts as $key)
 <tr>
     
-      <td> {{ $key['id'] }} </td>
-      <td> {{ $key['title'] }} </td>
-      <td> {{ $key['description'] }} </td>
-      <td> {{ $key['created_at'] }} </td>
-      <td> {{ $key['updated_at'] }} </td>
+      <td> {{ $key->id }} </td>
+      <td> {{ $key->title }} </td>
+      <td> {{ $key->description }} </td>
+      <td> {{ $key->created_at}} </td>
+      <td> {{ $key->updated_at }} </td>
+      <td> {{ $key->user->name}} </td>
      
   
     <td > <a class="btn btn-primary" href ='posts/{{$key['id']}}' >view</a></td>
@@ -34,3 +38,5 @@
 </table>
 <a href="/posts/create">Add post</a>
 </div>
+    
+@endsection

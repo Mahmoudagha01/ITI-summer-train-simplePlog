@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ValidationRequest;
 use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     /**
@@ -14,6 +17,7 @@ class PostController extends Controller
     public function index()
     {
         $posts= Post::all();
+        $user = Auth::id();
         return view('post.index',compact('posts'));
     }
 
@@ -24,8 +28,8 @@ class PostController extends Controller
      */
     public function create()
     {
-
-       return view("post.create");
+       $users=User::all();
+       return view("post.create",compact('users'));
     }
 
     /**
@@ -34,7 +38,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ValidationRequest $request)
     {
        // $data= $request->all();
        // Post::create($data);
@@ -49,6 +53,7 @@ class PostController extends Controller
            [
             'title'=>$request->title,
             'description'=>$request->description,
+            'user_id'=>Auth::id(),
             'created_at'=>$request->created_at,
             'updated_at'=>$request->updated_at
            ]
@@ -91,6 +96,12 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate(
+            [
+                   'title'=>['required','min:3'], 
+                   'description'=>['required','min:5']
+            ]
+            );
          $post= Post::find($id);
          $post->title=$request->title;
          $post->description=$request->description;
